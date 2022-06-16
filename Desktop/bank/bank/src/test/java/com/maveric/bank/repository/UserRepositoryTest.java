@@ -1,6 +1,7 @@
 package com.maveric.bank.repository;
 
 import com.maveric.bank.model.User;
+import com.maveric.bank.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserRepositoryTest {
 
     @Autowired
-        UserRepository repo;
+    UserService repo;
         User user1;
         User user2;
 

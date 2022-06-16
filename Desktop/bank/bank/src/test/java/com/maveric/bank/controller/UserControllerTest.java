@@ -4,14 +4,23 @@ import com.maveric.bank.model.User;
 import com.maveric.bank.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.Date;
 
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@ExtendWith(SpringExtension.class)
 @WebMvcTest({UserController.class})
 public class UserControllerTest {
     @Autowired
@@ -19,19 +28,16 @@ public class UserControllerTest {
     @MockBean
     private UserServiceImpl service;
     Date date = new Date();
-    User user;
-    ObjectMapper mapper;
 
-    UserControllerTest() {
-        this.user = new User(1, "Nagaraj", "Ganapati", "Shetti", "nagaraj@gmail.com", "7204988434", "banglore", java.sql.Date.valueOf("1994-11-02"), this.date, this.date, "nag@678", "Accountant");
-        this.mapper = new ObjectMapper();
-    }
+    @Autowired
+    MockMvc mockMvc;
 
-    @DisplayName("Test User for createUser")
-    @Test
-    void createUser() throws Exception {
-        String jsonString = this.mapper.writeValueAsString(this.user);
-        this.mvc.perform(MockMvcRequestBuilders.post("/api/users/", new Object[0]).contentType("application/json").accept(new String[]{"application/json"}).content(jsonString)).andExpect(MockMvcResultMatchers.status().isCreated());
-    }
+        @Test
+        void getControllerTest() throws Exception {
+            User user = new User(1 ,"Nagaraj", "Ganapati", "Shetti", "nagaraj@gmail.com", "7204988434", "banglore", java.sql.Date.valueOf("1994-11-02"), this.date, this.date, "nag@678", "Accountant");
+            given(service.createUser(user).getFirstName());
+            mockMvc.perform(get("/api/users/test")).andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.firstName", is("test")));
+        }
 
 }
